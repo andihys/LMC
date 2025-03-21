@@ -56,4 +56,6 @@ Un insieme S e’ detto decidibile se sia S che il complemento N−S sono semide
 
 Questo per un automa significa essere in grado di elencare sia gli elementi che fanno parte sia quelli che non fanno parte di un determinato linguaggio
 
-E proprio qui che sta la chiave del problema, dato che i linguaggi di programmazione sono costruiti a partire da un alfabeto finito ma sono caratterizzati dall’insieme (infinito) delle frasi lecite Non basta che tale insieme possa essere generato, è indispensabile poter decidere se una frase è giusta o sbagliata senza entrare in ciclo infinito
+E proprio qui che sta la chiave del problema, dato che i linguaggi di programmazione sono costruiti a partire da un alfabeto finito ma sono caratterizzati dall’insieme (infinito) delle frasi lecite Non basta che tale insieme possa essere generato, è indispensabile poter decidere se una frase è giusta o sbagliata senza entrare in ciclo infinito.
+
+- In questo modo un compilatore e in grado di arrestarsi e segnalare errore se una frase non appartiene al linguaggio
