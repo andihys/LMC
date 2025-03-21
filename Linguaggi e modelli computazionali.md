@@ -114,12 +114,6 @@ Elementi che compongono un linguaggio:
 Una **grammatica formale** è un modello matematico utilizzato per descrivere la **struttura sintattica** di un linguaggio, ovvero l'insieme delle regole che stabiliscono quali sequenze di simboli costituiscono frasi valide in quel linguaggio.
 
 Una grammatica viene rappresentata tramite una **quadrupla**:
-- **VT**: insieme finito di simboli terminali  
-- **VN**: insieme finito di simboli non terminali (metasimboli)  
-- **P**: insieme finito delle produzioni  
-- **S**: simbolo non terminale speciale, chiamato **scopo della grammatica**  
-
-Vediamo meglio:
 
 $$
 G = (V_T, V_N, P, S)
