@@ -4,11 +4,67 @@
 
 # **Indice**
 
+- [INTRODUZIONE](#Introduzione)
 - [TEORIA DELLA COMPUTABILITÀ](#teoria)
 - [LINGUAGGI E GRAMMATICHE](#linguaggi)
 - [CLASSIFICAZIONE DELLE GRAMMATICHE DI CHOMSKY](#chomsky)
 
 ---
+<h1 id=Introduzione style="color: blue;">Introduzione</h1>
+
+
+## 📚 Cos'è la Computazione?
+
+La **computazione** è il processo di esecuzione di una sequenza di operazioni definite per risolvere un problema o calcolare un risultato. In termini più formali, si riferisce a **qualsiasi trasformazione di informazioni** secondo regole ben precise, eseguita da un sistema (umano, meccanico o digitale). La computazione è alla base dell'informatica, della matematica computazionale e delle scienze cognitive.
+
+> **Esempio**: Calcolare la somma di due numeri, eseguire una ricerca su internet, o simulare un sistema fisico sono tutti atti di computazione.
+
+---
+
+## 🧠 Modelli di Computazione
+
+Un **modello di computazione** è una rappresentazione astratta di un sistema che esegue calcoli. Serve a formalizzare cosa significa "calcolare" e quali problemi una macchina è in grado di risolvere. Ecco i principali:
+
+### 1. 🧾 **Macchina di Turing**
+- Introdotta da Alan Turing nel 1936.
+- Modello teorico con un nastro infinito e una testina che legge/scrive simboli.
+- È il modello di riferimento per la **computabilità**.
+- Rappresenta qualsiasi algoritmo eseguibile da un computer classico.
+
+### 2. 🧮 **Lambda Calcolo**
+- Introdotto da Alonzo Church.
+- Basato su funzioni e sostituzioni.
+- Modello fondamentale per la **programmazione funzionale**.
+- Equivalente alla Macchina di Turing in termini di potenza computazionale.
+
+### 3. 🧰 **Macchina RAM (Random Access Machine)**
+- Modello astratto di un computer reale con registri e accesso diretto alla memoria.
+- Utile per analizzare la **complessità computazionale** degli algoritmi.
+
+### 4. 🔁 **Automati Finiti**
+- Modelli semplici per sistemi con numero finito di stati.
+- Utilizzati per descrivere linguaggi regolari e sistemi reattivi.
+- Fondamentali nella **teoria dei linguaggi formali**.
+
+### 5. 🧊 **Modelli a Stati Quantistici (Quantum Computing)**
+- Basati sui principi della meccanica quantistica (qubit, sovrapposizione, entanglement).
+- Possono risolvere alcuni problemi più velocemente dei modelli classici.
+- Esempio: **Algoritmo di Shor** per la fattorizzazione di numeri primi.
+
+---
+
+## 🧩 Confronto tra i Modelli
+
+| Modello              | Potenza Computazionale | Dominio d'Uso                  |
+|----------------------|------------------------|--------------------------------|
+| Macchina di Turing   | Universale             | Fondamenti teorici             |
+| Lambda Calcolo       | Universale             | Programmazione funzionale      |
+| Macchina RAM         | Universale             | Analisi di algoritmi           |
+| Automati Finiti      | Limitata               | Linguaggi regolari, parsing    |
+| Modelli Quantistici  | Potenzialmente superiori | Calcolo quantistico           |
+
+---
+
 
 <h1 id=teoria style="color: blue;">Teoria della computabilità</h1>
 
