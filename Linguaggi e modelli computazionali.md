@@ -765,10 +765,10 @@ La **EBNF** è una **forma estesa** della BNF che permette di scrivere le regole
 
 | Forma EBNF       | Equivalente BNF       | Significato                               |
 |------------------|------------------------|--------------------------------------------|
-| X ::= [A] B      | X ::= A B \| B         | A può comparire o no (opzionale)           |
-| X ::= {A} B      | X ::= A B \| A A B ... | A può comparire zero o più volte           |
-| X ::= (a | b | c)| X ::= a \| b \| c      | Raggruppamento di alternative              |
-| X ::= B | A X    | (ricorsione a destra)  |                                            |
+| `X ::= [A] B`      | `X ::= A B \| B `       | A può comparire o no (opzionale)           |
+| `X ::= {A} B `     | `X ::= A B \| A A B ...` | A può comparire zero o più volte           |
+| `X ::= (a \| b \| c)`| `X ::= a \| b \| c`      | Raggruppamento di alternative              |
+| `X ::= B \| A X`    | (ricorsione a destra)  |                                            |
 
 
 ### 🔢 Esempio EBNF – Numeri Naturali
@@ -814,7 +814,7 @@ Esempi di input validi:
 
 | Caratteristica        | BNF                            | EBNF                                      |
 |------------------------|--------------------------------|--------------------------------------------|
-| Sintassi alternativa   | Con `|`                        | Con `|`, ma anche con gruppi `( )`         |
+| Sintassi alternativa   | Con `\|`                        | Con `\|`, ma anche con gruppi `( )`         |
 | Opzionalità            | Non supportata nativamente     | Con `[ ... ]`                              |
 | Ripetizione            | Manuale (con ricorsione)       | Con `{ ... }`                              |
 | Leggibilità            | Meno compatta                  | Più compatta e vicina alla programmazione  |
@@ -869,4 +869,32 @@ for num in test_cases:
 ```
 
 ---
+### La stringa vuota
+La stringa vuota può far parte delle frasi generate da una grammatica di Tipo 0 (le frasi possono accorciarsi), ma non può far parte delle frasi generate da una grammatica di Tipo 1 (le frasi non si possono mai accorciare).
+Come abbiamo già detto, però, questo è ok perché anche se le grammatiche di Tipo 2 e 3 ammettono la stringa vuota sul lato destro, esiste sempre una grammatica equivalente senza ε-rules.
+In più, fa comodo avere la stringa vuota per esprimere parti del linguaggio opzionali, infatti **è possibile farlo senza alterare il tipo della grammatica** purché:
+- Questa ammetta la presenza di ε nella sola produzione di top-level S -> ε
+- S non compaia altrove
+  
+In questo modo, **la stringa vuota può essere scelta solo all’inizio** (cioè al primo passo di derivazione), facendo in modo che le forme di frasi non si accorcino.
+Questo teorema è importante perché ci dice che semplicemente si può scegliere di avere la stringa vuota oppure no: è una nostra scelta. Non cambia nulla perché comunque un linguaggio di tipo X - con la stringa vuota oppure no, rimane sempre dello stesso tipo.
 
+### Forme normali
+Un linguaggio di Tipo 2 non vuoto può essere sempre generato da una grammatica di Tipo 2 in cui:
+- Ogni simbolo compare nella derivazione di qualche frase di L (esistono solo simboli utili)
+- Non ci sono produzioni della forma AB con A, B simboli non terminali (niente produzioni che rinominano i simboli)
+- Se il linguaggio non comprende la stringa vuota, allora non ci sono produzioni A ε
+
+Conosciamo DUE FORME NORMALI a cui possiamo condurre tutte le produzioni:
+- **FORMA NORMALE DI CHOMSKY**: A -> BC | a
+
+con A,B,C∈VN, a∈VT∪𝜀
+
+Quindi o produci due simboli non terminali, oppure un solo simbolo terminale.
+- **FORMA NORMALE DI GREIBACH**: A -> a α
+
+con A∈VN, a∈VT, 𝛼∈VN*
+
+Questa forma vale per linguaggio privi di 𝜀 e ogni produzione indica una frase con un simbolo terminale seguito da qualsiasi stringa.
+
+La forma normale di Greibach è molto utilizzata perché evidenziare l'iniziale è molto utile in quanto un Riconoscitore (Parser) appena vede il carattere iniziale della frase, capisce subito quale regola guardare.
