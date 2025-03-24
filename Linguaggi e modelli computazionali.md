@@ -8,8 +8,8 @@
 - [Teoria della Computabilità](#teoria)
 - [Linguaggi e Grammatiche](#linguaggi)
 - [Classificazione delle grammatiche di Chomsky](#chomsky)
+- [Self-Embedding e notazioni: BNF ed EBNF](#bnf)
 - [Riconoscere una grammatica di tipo 2: PDA](#pda)
-- [Notazioni BNF ed EBNF](#bnf)
 
 ---
 <h1 id=Introduzione style="color: blue;">Introduzione</h1>
@@ -432,6 +432,241 @@ Certo! Ecco una sezione in **Markdown** su **come riconoscere le grammatiche di 
 
 ---
 
+<h1 id=bnf style="color: blue;">Self-Embedding e notazioni: BNF ed EBNF</h1>
+
+### **Self-Embedding nelle Grammatiche**
+
+Il **self-embedding** (auto-annidamento) è una proprietà di alcune grammatiche — in particolare **grammatiche libere dal contesto** — che permette la **ricorsione strutturale** all'interno delle produzioni.
+
+Una grammatica si dice **self-embedding** se contiene **produzioni che permettono a un simbolo non terminale di generare se stesso**, in modo **annidato**, cioè **non in coda o in testa**, ma **all'interno** della struttura.
+
+#### **Esempio**
+
+Consideriamo la produzione:
+
+$$
+S \rightarrow a S b
+$$
+
+Questa regola permette a $S$ di apparire **all'interno** di una nuova istanza di se stesso, incapsulato tra altri simboli ($a$ e $b$). Questa è una **struttura auto-riferita** e annidata, quindi è **self-embedding**.
+
+Grazie al self-embedding, questa grammatica può generare linguaggi come:
+
+$$
+L = \{ a^n b^n \mid n \geq 1 \}
+$$
+
+#### **Significato e Utilità**
+
+- Il self-embedding è ciò che permette alle grammatiche libere dal contesto di **modellare strutture gerarchiche profonde**, come:
+  - parentesi annidate
+  - strutture a blocchi nei linguaggi di programmazione
+  - frasi linguistiche complesse (in linguistica computazionale)
+- Dal punto di vista computazionale, **il self-embedding è ciò che rende necessario un'automazione con memoria**, come gli **automi a pila (PDA)**, poiché un automa a stati finiti **non può gestire annidamenti arbitrari**.
+
+#### **Nota**
+Non tutte le grammatiche libere dal contesto sono self-embedding. Alcune CFG semplici possono essere risolte anche senza annidamento.
+
+
+## ✳️ BNF – Backus-Naur Form
+
+La **BNF** (forma di Backus-Naur) viene utilizzata per definire la sintassi di linguaggi formali (tipo 2 o 3).  
+Poiché nelle tastiere comuni non è facile scrivere lettere greche e simboli speciali, si adotta una notazione testuale semplificata.
+
+#### In una grammatica BNF:
+
+- Le regole di produzione hanno la forma:  
+  **x ::= α**  
+  dove **x** è un non terminale, **α** è una sequenza di terminali e/o non terminali
+
+- I non terminali sono racchiusi tra **< e >**, ad es. `<nome>`
+
+- Il simbolo **|** indica **alternative**, ad es.  
+  `x ::= A1 | A2 | ... | An`  
+  equivale a più regole con lo stesso lato sinistro
+
+
+### 🐱 Esempio BNF – Frase con “gatto e topo”
+
+Grammatica:
+
+```
+VT = { il, gatto, topo, sasso, mangia, beve }
+VN = { <frase>, <soggetto>, <verbo>, <compl-ogg>, <articolo>, <nome> }
+S  = <frase>
+
+P = {
+  <frase>     ::= <soggetto> <verbo> <compl-ogg>
+  <soggetto>  ::= <articolo> <nome>
+  <articolo>  ::= il
+  <nome>      ::= gatto | topo | sasso
+  <verbo>     ::= mangia | beve
+  <compl-ogg> ::= <articolo> <nome>
+}
+```
+
+Esempio di derivazione per la frase:  
+**"il gatto mangia il topo"**
+
+```
+<frase>
+→ <soggetto> <verbo> <compl-ogg>
+→ il <nome> mangia <compl-ogg>
+→ il gatto mangia <articolo> <nome>
+→ il gatto mangia il topo
+```
+
+
+## 🟡 EBNF – Extended Backus-Naur Form
+
+La **EBNF** è una **forma estesa** della BNF che permette di scrivere le regole in modo più compatto ed espressivo.
+
+### ✨ Notazioni principali della EBNF:
+
+| Forma EBNF       | Equivalente BNF       | Significato                               |
+|------------------|------------------------|--------------------------------------------|
+| `X ::= [A] B`      | `X ::= A B \| B `       | A può comparire o no (opzionale)           |
+| `X ::= {A} B `     | `X ::= A B \| A A B ...` | A può comparire zero o più volte           |
+| `X ::= (a \| b \| c)`| `X ::= a \| b \| c`      | Raggruppamento di alternative              |
+| `X ::= B \| A X`    | (ricorsione a destra)  |                                            |
+
+
+### 🔢 Esempio EBNF – Numeri Naturali
+
+Sintassi:
+
+```
+VT = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
+VN = { <num>, <cifra>, <cifra-non-nulla> }
+S  = <num>
+
+P = {
+  <num> ::= <cifra> | <cifra-non-nulla> {<cifra>}
+  <cifra> ::= 0 | <cifra-non-nulla>
+  <cifra-non-nulla> ::= 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+}
+```
+
+📝 Nota: secondo questa grammatica, numeri come `013` **non sono validi**, perché in C (e altri linguaggi) il `0` iniziale può indicare una **base ottale**.
+
+---
+
+### 🆔 Esempio EBNF – Identificatori
+
+Grammatica per identificatori (es. `a1`, `Z9`, `X07`):
+
+```
+P = {
+  <id> ::= <lettera> {<lettera> | <cifra>}
+  <lettera> ::= A | B | C | ... | Z
+  <cifra> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+}
+```
+
+Esempi di input validi:
+
+- `A1` → valido  
+- `Z9` → valido  
+- `013` → **non valido**, inizia con cifra e non con lettera
+
+
+### 🧩 Differenze tra BNF ed EBNF
+
+| Caratteristica        | BNF                            | EBNF                                      |
+|------------------------|--------------------------------|--------------------------------------------|
+| Sintassi alternativa   | Con `\|`                        | Con `\|`, ma anche con gruppi `( )`         |
+| Opzionalità            | Non supportata nativamente     | Con `[ ... ]`                              |
+| Ripetizione            | Manuale (con ricorsione)       | Con `{ ... }`                              |
+| Leggibilità            | Meno compatta                  | Più compatta e vicina alla programmazione  |
+
+
+
+## 🐍 Esempio Python – Validazione di numeri naturali secondo EBNF
+
+Grammatica EBNF:
+
+```
+<num> ::= <cifra> | <cifra-non-nulla> {<cifra>}
+<cifra> ::= 0 | <cifra-non-nulla>
+<cifra-non-nulla> ::= 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+```
+
+### ✅ Implementazione Python
+
+```python
+def is_valid_number(s):
+    if not s:
+        return False
+    
+    # Se la stringa è lunga 1 e il carattere è una cifra, è valida
+    if len(s) == 1:
+        return s in "0123456789"
+    
+    # Se inizia con '0' ed è più lunga, non valida (es. "013")
+    if s[0] == '0':
+        return False
+
+    # Controlla che tutti i caratteri siano cifre
+    return all(c in "0123456789" for c in s)
+
+# Esempi di test
+test_cases = ["0", "7", "123", "013", "", "987654", "00"]
+
+for num in test_cases:
+    print(f"{num!r} → {'Valido' if is_valid_number(num) else 'Non valido'}")
+```
+
+### 🧪 Output atteso
+
+```
+'0' → Valido
+'7' → Valido
+'123' → Valido
+'013' → Non valido
+'' → Non valido
+'987654' → Valido
+'00' → Non valido
+```
+
+---
+### La stringa vuota
+La stringa vuota può far parte delle frasi generate da una grammatica di Tipo 0 (le frasi possono accorciarsi), ma non può far parte delle frasi generate da una grammatica di Tipo 1 (le frasi non si possono mai accorciare).
+Come abbiamo già detto, però, questo è ok perché anche se le grammatiche di Tipo 2 e 3 ammettono la stringa vuota sul lato destro, esiste sempre una grammatica equivalente senza ε-rules.
+In più, fa comodo avere la stringa vuota per esprimere parti del linguaggio opzionali, infatti **è possibile farlo senza alterare il tipo della grammatica** purché:
+- Questa ammetta la presenza di ε nella sola produzione di top-level S -> ε
+- S non compaia altrove
+  
+In questo modo, **la stringa vuota può essere scelta solo all’inizio** (cioè al primo passo di derivazione), facendo in modo che le forme di frasi non si accorcino.
+Questo teorema è importante perché ci dice che semplicemente si può scegliere di avere la stringa vuota oppure no: è una nostra scelta. Non cambia nulla perché comunque un linguaggio di tipo X - con la stringa vuota oppure no, rimane sempre dello stesso tipo.
+
+### Forme normali
+Un linguaggio di Tipo 2 non vuoto può essere sempre generato da una grammatica di Tipo 2 in cui:
+- Ogni simbolo compare nella derivazione di qualche frase di L (esistono solo simboli utili)
+- Non ci sono produzioni della forma AB con A, B simboli non terminali (niente produzioni che rinominano i simboli)
+- Se il linguaggio non comprende la stringa vuota, allora non ci sono produzioni A ε
+
+Conosciamo DUE FORME NORMALI a cui possiamo condurre tutte le produzioni:
+- **FORMA NORMALE DI CHOMSKY**: A -> BC | a
+
+con A,B,C∈VN, a∈VT∪𝜀
+
+Quindi o produci due simboli non terminali, oppure un solo simbolo terminale.
+- **FORMA NORMALE DI GREIBACH**: A -> a α
+
+con A∈VN, a∈VT, 𝛼∈VN*
+
+Questa forma vale per linguaggio privi di 𝜀 e ogni produzione indica una frase con un simbolo terminale seguito da qualsiasi stringa.
+
+La forma normale di Greibach è molto utilizzata perché evidenziare l'iniziale è molto utile in quanto un Riconoscitore (Parser) appena vede il carattere iniziale della frase, capisce subito quale regola guardare.
+
+---
+
+
+#######################################################################################################################################################################################################################
+
+
+---
+
 <h1 id=pda style="color: blue;">Pushdown Automaton</h1>
 
 Un **Pushdown Automaton (PDA)** è un automa a stati finiti arricchito con una **pila** (*stack*), che gli consente di gestire una memoria ausiliaria. Questa struttura permette al PDA di riconoscere **strutture ricorsive o annidate**, tipiche dei linguaggi context-free.
@@ -702,199 +937,5 @@ else:
 - Il parser lavora in modo **ricorsivo**, ma è modulare e facilmente **estensibile** a nuove grammatiche.
 - Si separa chiaramente la **logica di riconoscimento** dalla **grammatica**, rendendo il tutto molto più pulito e manutenibile.
 
----
-Perfetto! Ecco la **sezione estesa e completa** sulle **notazioni BNF ed EBNF**, integrando anche le immagini più recenti. Il testo è stato adattato in formato chiaro e compatibile con qualsiasi piattaforma (PDF, Word, Notion, ecc.):
 
 ---
-<h1 id=bnf style="color: blue;">Notazioni: BNF ed EBNF</h1>
-
-### ✳️ BNF – Backus-Naur Form
-
-La **BNF** (forma di Backus-Naur) viene utilizzata per definire la sintassi di linguaggi formali (tipo 2 o 3).  
-Poiché nelle tastiere comuni non è facile scrivere lettere greche e simboli speciali, si adotta una notazione testuale semplificata.
-
-#### In una grammatica BNF:
-
-- Le regole di produzione hanno la forma:  
-  **x ::= α**  
-  dove **x** è un non terminale, **α** è una sequenza di terminali e/o non terminali
-
-- I non terminali sono racchiusi tra **< e >**, ad es. `<nome>`
-
-- Il simbolo **|** indica **alternative**, ad es.  
-  `x ::= A1 | A2 | ... | An`  
-  equivale a più regole con lo stesso lato sinistro
-
-
-### 🐱 Esempio BNF – Frase con “gatto e topo”
-
-Grammatica:
-
-```
-VT = { il, gatto, topo, sasso, mangia, beve }
-VN = { <frase>, <soggetto>, <verbo>, <compl-ogg>, <articolo>, <nome> }
-S  = <frase>
-
-P = {
-  <frase>     ::= <soggetto> <verbo> <compl-ogg>
-  <soggetto>  ::= <articolo> <nome>
-  <articolo>  ::= il
-  <nome>      ::= gatto | topo | sasso
-  <verbo>     ::= mangia | beve
-  <compl-ogg> ::= <articolo> <nome>
-}
-```
-
-Esempio di derivazione per la frase:  
-**"il gatto mangia il topo"**
-
-```
-<frase>
-→ <soggetto> <verbo> <compl-ogg>
-→ il <nome> mangia <compl-ogg>
-→ il gatto mangia <articolo> <nome>
-→ il gatto mangia il topo
-```
-
-
-## 🟡 EBNF – Extended Backus-Naur Form
-
-La **EBNF** è una **forma estesa** della BNF che permette di scrivere le regole in modo più compatto ed espressivo.
-
-### ✨ Notazioni principali della EBNF:
-
-| Forma EBNF       | Equivalente BNF       | Significato                               |
-|------------------|------------------------|--------------------------------------------|
-| `X ::= [A] B`      | `X ::= A B \| B `       | A può comparire o no (opzionale)           |
-| `X ::= {A} B `     | `X ::= A B \| A A B ...` | A può comparire zero o più volte           |
-| `X ::= (a \| b \| c)`| `X ::= a \| b \| c`      | Raggruppamento di alternative              |
-| `X ::= B \| A X`    | (ricorsione a destra)  |                                            |
-
-
-### 🔢 Esempio EBNF – Numeri Naturali
-
-Sintassi:
-
-```
-VT = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
-VN = { <num>, <cifra>, <cifra-non-nulla> }
-S  = <num>
-
-P = {
-  <num> ::= <cifra> | <cifra-non-nulla> {<cifra>}
-  <cifra> ::= 0 | <cifra-non-nulla>
-  <cifra-non-nulla> ::= 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-}
-```
-
-📝 Nota: secondo questa grammatica, numeri come `013` **non sono validi**, perché in C (e altri linguaggi) il `0` iniziale può indicare una **base ottale**.
-
----
-
-### 🆔 Esempio EBNF – Identificatori
-
-Grammatica per identificatori (es. `a1`, `Z9`, `X07`):
-
-```
-P = {
-  <id> ::= <lettera> {<lettera> | <cifra>}
-  <lettera> ::= A | B | C | ... | Z
-  <cifra> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-}
-```
-
-Esempi di input validi:
-
-- `A1` → valido  
-- `Z9` → valido  
-- `013` → **non valido**, inizia con cifra e non con lettera
-
-
-### 🧩 Differenze tra BNF ed EBNF
-
-| Caratteristica        | BNF                            | EBNF                                      |
-|------------------------|--------------------------------|--------------------------------------------|
-| Sintassi alternativa   | Con `\|`                        | Con `\|`, ma anche con gruppi `( )`         |
-| Opzionalità            | Non supportata nativamente     | Con `[ ... ]`                              |
-| Ripetizione            | Manuale (con ricorsione)       | Con `{ ... }`                              |
-| Leggibilità            | Meno compatta                  | Più compatta e vicina alla programmazione  |
-
-
-
-## 🐍 Esempio Python – Validazione di numeri naturali secondo EBNF
-
-Grammatica EBNF:
-
-```
-<num> ::= <cifra> | <cifra-non-nulla> {<cifra>}
-<cifra> ::= 0 | <cifra-non-nulla>
-<cifra-non-nulla> ::= 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-```
-
-### ✅ Implementazione Python
-
-```python
-def is_valid_number(s):
-    if not s:
-        return False
-    
-    # Se la stringa è lunga 1 e il carattere è una cifra, è valida
-    if len(s) == 1:
-        return s in "0123456789"
-    
-    # Se inizia con '0' ed è più lunga, non valida (es. "013")
-    if s[0] == '0':
-        return False
-
-    # Controlla che tutti i caratteri siano cifre
-    return all(c in "0123456789" for c in s)
-
-# Esempi di test
-test_cases = ["0", "7", "123", "013", "", "987654", "00"]
-
-for num in test_cases:
-    print(f"{num!r} → {'Valido' if is_valid_number(num) else 'Non valido'}")
-```
-
-### 🧪 Output atteso
-
-```
-'0' → Valido
-'7' → Valido
-'123' → Valido
-'013' → Non valido
-'' → Non valido
-'987654' → Valido
-'00' → Non valido
-```
-
----
-### La stringa vuota
-La stringa vuota può far parte delle frasi generate da una grammatica di Tipo 0 (le frasi possono accorciarsi), ma non può far parte delle frasi generate da una grammatica di Tipo 1 (le frasi non si possono mai accorciare).
-Come abbiamo già detto, però, questo è ok perché anche se le grammatiche di Tipo 2 e 3 ammettono la stringa vuota sul lato destro, esiste sempre una grammatica equivalente senza ε-rules.
-In più, fa comodo avere la stringa vuota per esprimere parti del linguaggio opzionali, infatti **è possibile farlo senza alterare il tipo della grammatica** purché:
-- Questa ammetta la presenza di ε nella sola produzione di top-level S -> ε
-- S non compaia altrove
-  
-In questo modo, **la stringa vuota può essere scelta solo all’inizio** (cioè al primo passo di derivazione), facendo in modo che le forme di frasi non si accorcino.
-Questo teorema è importante perché ci dice che semplicemente si può scegliere di avere la stringa vuota oppure no: è una nostra scelta. Non cambia nulla perché comunque un linguaggio di tipo X - con la stringa vuota oppure no, rimane sempre dello stesso tipo.
-
-### Forme normali
-Un linguaggio di Tipo 2 non vuoto può essere sempre generato da una grammatica di Tipo 2 in cui:
-- Ogni simbolo compare nella derivazione di qualche frase di L (esistono solo simboli utili)
-- Non ci sono produzioni della forma AB con A, B simboli non terminali (niente produzioni che rinominano i simboli)
-- Se il linguaggio non comprende la stringa vuota, allora non ci sono produzioni A ε
-
-Conosciamo DUE FORME NORMALI a cui possiamo condurre tutte le produzioni:
-- **FORMA NORMALE DI CHOMSKY**: A -> BC | a
-
-con A,B,C∈VN, a∈VT∪𝜀
-
-Quindi o produci due simboli non terminali, oppure un solo simbolo terminale.
-- **FORMA NORMALE DI GREIBACH**: A -> a α
-
-con A∈VN, a∈VT, 𝛼∈VN*
-
-Questa forma vale per linguaggio privi di 𝜀 e ogni produzione indica una frase con un simbolo terminale seguito da qualsiasi stringa.
-
-La forma normale di Greibach è molto utilizzata perché evidenziare l'iniziale è molto utile in quanto un Riconoscitore (Parser) appena vede il carattere iniziale della frase, capisce subito quale regola guardare.
