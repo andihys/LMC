@@ -1,6 +1,8 @@
 # LMC
-Languages and computational models - Software Engineering
+Linguaggi e modelli computazionali - Ingegneria Informatica
 
-- Computational model theory
-- Languages and grammars theory
-- Pratical development of compiler
+- Teoria della computazione
+- Linguaggi e grammatiche
+- Interpreti e compilatori
+
+(IT version)
